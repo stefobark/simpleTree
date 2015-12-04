@@ -37,10 +37,10 @@ an ordered list: 67891011
 ```
 so, we're getting the right order, but that's only because the tree doesn't have many nested elements on the left hand side.. and it skips twelve.. for the same reason.. gotta think harder.
 
-Here's what I have so far:
+Here's what I have so far (in simpleTree.h):
 
 ```
- //this is the function that gets called from the main program.
+ 	//this is the function that gets called from the main program.
                list<Object> getList(){
                	inOrder(root);
                	return ourList;
@@ -59,14 +59,16 @@ Here's what I have so far:
                 	 else if(current->left == NULL){ 
                 	 	 ourList.push_back(current->value);
                 	 	
-                	 	 //now, we will work back up the list, using the parent pointer i added to the BSTNode struct
+                	 	 //now, we will work back up the list, 
+                	 	 //using the parent pointer i added to the BSTNode struct
                 	 	 //so, while the parent is not null, and only the root's parent will be null
                 	 	 while(current->parent != NULL){
                 	 		 current = current->parent;
                 	 		 ourList.push_back(current->value);
                 	 		
                 	 		 //if there is an element to the right, push it to the list.
-                	 		 //but, this won't get at the nested elements on the left side!! and it won't go past root->right
+                	 		 //but, this won't get at the nested elements on the left side!! 
+                	 		 //and it won't go past root->right
                 	 		 if(current->right != NULL){
                 	 			 ourList.push_back(current->right->value); 
                 	 		 }
