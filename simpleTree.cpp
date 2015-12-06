@@ -18,13 +18,12 @@ int main(){
         int found = tree.find(12);
         cout << "did we find a 12? we should have a 1!! --> " << found << endl;
         
-        /*inOrder = tree.getList();
+        inOrder = tree.getList();
         cout << "an ordered list represent values in our tree: ";
         for(list<int>::iterator itr = inOrder.begin(); itr != inOrder.end(); itr++){
         		cout << *itr << " ";
         }
         cout << endl;
-        */
         
         int min = tree.findMin();
         int max = tree.findMax();

@@ -40,7 +40,11 @@ class BST {
                 	findMaxRec(root);
                 }
                
-               
+                list<Object> getList (){
+                	makeList(root);
+                	ourList.sort();
+                	return ourList;
+                }
 
 
         private:
@@ -93,6 +97,12 @@ class BST {
       int findMaxRec(BSTNode * current){
         	if(current->right != NULL) findMaxRec(current->right);
          else return current->value;
+      }
+      
+      void makeList(BSTNode * current){
+      	ourList.push_back(current->value);
+      	if(current->left != NULL) makeList(current->left);
+      	if(current->right != NULL) makeList(current->right);
       }
 };
 
