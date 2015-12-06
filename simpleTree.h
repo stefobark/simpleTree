@@ -29,13 +29,7 @@ class BST {
 					}
 
                 bool find(Object x){
-                    current = root;
-                    while(current != NULL){
-                          	 if(x > current->value) current = current->right;
-                            else if(x < current->value) current = current->left;
-                            else if(current->value == x) return true;
-                            else return false;
-                    }
+                    bool answer = findRec(x, root);
                 }
                 
                 int findMin(){
@@ -82,6 +76,13 @@ class BST {
 					insertRec(newNode, current->left);
 				}
 				else return;
+		}
+		
+		bool findRec(Object x, BSTNode * current){
+           	 if(x > current->value) findRec(x, current->right);
+             else if(x < current->value) findRec(x, current->left);
+             else if(current->value == x) return true;
+             else return false;
 		}
 		
 		int findMinRec(BSTNode * current){
