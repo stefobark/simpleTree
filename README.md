@@ -13,7 +13,7 @@ public:
         	ourList.sort();
         	return ourList;
         }
-
+private:
 	void makeList(BSTNode * current){
 	      	ourList.push_back(current->value);
 	      	if(current->left != NULL) makeList(current->left);
