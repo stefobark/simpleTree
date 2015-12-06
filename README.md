@@ -32,7 +32,10 @@ new value is smaller than current value: 6 < 7
 	
 did we find a 12? we should have a 1!! --> 1
 
+an ordered list represent values in our tree: 6 7 8 9 10 11 12 
+
 Min: 6, Max: 12
+
 
 
 ```
