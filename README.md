@@ -1,7 +1,7 @@
 # simpleTree
 the simplest possible binary tree.. 
 
-I made all the methods recursive. The public methods need access to a private data member(root), for their starting point. So, I for insert, findMin, findMax and find, I made a public method that calls a private method and passes along root... because the main program won't have access to root.
+I made all the methods recursive. The public methods need access to a private data member(root), for their starting point. So, for insert(), findMin(), findMax() and find(), I made a public method that calls a private method and passes along root... because the main program won't have access to root.
 
 Now, the output looks like this:
 ```
