@@ -10,7 +10,6 @@ class BST {
                         Object value;
                         BSTNode * left;
                         BSTNode * right;
-                        BSTNode * parent;
                 };
 
         public:
@@ -22,60 +21,12 @@ class BST {
                         if(root == NULL) return 1;
                         else return 0;
                 }
-
-            	void insert(Object x){
-            				//create this node, with x as it's value. now we have to figure out where to put it
-                        BSTNode * newNode = new BSTNode;
-                        newNode->value = x;
-                        
-                        //if the tree is empty, set root to newNode
-                        if(empty()){
-                                root = newNode;
-                                ourList.push_back(root->value);
-                        } else {
-                                current = root;
-
-                                while(true){
-                                        if(newNode->value < current->value){
-                                        			cout << newNode->value << " < " << current->value << endl;
-                                                //check if the left node is already filled
-                                                //if it is not filled already, then, we'll set current->left to newNode
-                                                if(current->left == NULL){
-                                                	newNode->parent = current;
-                                                	current->left = newNode;
-                                                	cout << "\tadding the newNode to the left (and pushing to the list)" << endl;
-                                                	ourList.push_back(current->left->value);
-                                                	break;
-                                                } else {
-                                                	//if newNode value is less, move current to the left
-                                                	current = current->left;
-                                                	cout << "\tmoving to the left because the next node is occupied" << endl;
-                                                }
-                                                	
-                                                	
-                                        } else if(newNode->value > current->value){
-                                        			cout << newNode->value << " > " << current->value << endl;
-                                                
-                                                //and check if it is filled.
-                                                //if it is not filled already, then, we'll set current to newNode
-                                                if(current->right == NULL){
-                                                	newNode->parent = current;
-                                                	current->right = newNode;
-                                                	cout << "\tadding the newNode to the right (and pushing to the list)" << endl;
-                                                	ourList.push_back(current->right->value);
-                                                	break;
-                                                } else {
-                                                	//if the new value is bigger, move current to the right
-                                                	current = current->right;
-                                                	cout << "\tmoving to the right because the next node is occupied" << endl;
-                                                }	
-                                                	
-                                        } else if(newNode->value == current->value){
-                                        		 	break;
-                                        } else break;
-                                }
-                        }
-                }
+					
+					void recursiveInsert(Object x){
+						BSTNode * newNode = new BSTNode;
+						newNode->value = x;
+						insertRec(newNode, root);
+					}
 
                 bool find(Object x){
                     current = root;
@@ -88,26 +39,13 @@ class BST {
                 }
                 
                 int findMin(){
-                	  current = root;
-                    while(current != NULL){
-                          	 if(current->left != NULL) current = current->left;
-                            else return current->value;
-                    }
+                	findMinRec(root);
                 }
                 
-                 int findMax(){
-                	  current = root;
-                    while(current != NULL){
-                          	 if(current->right != NULL) current = current->right;
-                            else return current->value;
-                    }
+                int findMax(){
+                	findMaxRec(root);
                 }
                
-               //this is the function that gets called from the main program.
-               list<Object> getList(){
-               	ourList.sort();
-               	return ourList;
-               }
                
 
 
@@ -115,4 +53,45 @@ class BST {
         list<Object> ourList;
         BSTNode * root;
         BSTNode * current;
+        
+        void insertRec(BSTNode * newNode, BSTNode * current){
+						
+				if(empty()){
+					root = newNode;
+				}
+				else if(newNode->value > current->value && current->right == NULL){
+					cout << "new value is bigger than current value: " << newNode->value << " > " << current->value << endl;
+					cout << "\tadding " << newNode->value << " to the right of current node with value " << current->value << endl;
+					current->right = newNode;
+					return;
+				}
+				else if(newNode->value > current->value && current->right != NULL){
+					cout << "new value is bigger than current value: " << newNode->value << " > " << current->value << endl;
+					cout << "\tmoving to the right so we can see how our new value compares to that node" << endl;
+				 	insertRec(newNode, current->right);
+				}
+				else if(newNode->value < current->value && current->left == NULL){
+				cout << "new value is smaller than current value: " << newNode->value << " < " << current->value << endl;
+				cout << "\tadding " << newNode->value << " to the left of current node with value " << current->value << endl;
+					current->left = newNode;
+					return;
+				}
+				else if(newNode->value < current->value && current->left != NULL){
+					cout << "new value is smaller than current value: " << newNode->value << " < " << current->value << endl;
+					cout << "\tmoving to the right so we can see how our new value compares to that node" << endl;
+					insertRec(newNode, current->left);
+				}
+				else return;
+		}
+		
+		int findMinRec(BSTNode * current){
+        	 if(current->left != NULL) findMinRec(current->left);
+          else return current->value;
+      }
+      
+      int findMaxRec(BSTNode * current){
+        	if(current->right != NULL) findMaxRec(current->right);
+         else return current->value;
+      }
 };
+
