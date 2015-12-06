@@ -31,6 +31,7 @@ class BST {
                         //if the tree is empty, set root to newNode
                         if(empty()){
                                 root = newNode;
+                                ourList.push_back(root->value);
                         } else {
                                 current = root;
 
@@ -42,7 +43,8 @@ class BST {
                                                 if(current->left == NULL){
                                                 	newNode->parent = current;
                                                 	current->left = newNode;
-                                                	cout << "\tadding the newNode to the tree" << endl;
+                                                	cout << "\tadding the newNode to the left (and pushing to the list)" << endl;
+                                                	ourList.push_back(current->left->value);
                                                 	break;
                                                 } else {
                                                 	//if newNode value is less, move current to the left
@@ -59,7 +61,8 @@ class BST {
                                                 if(current->right == NULL){
                                                 	newNode->parent = current;
                                                 	current->right = newNode;
-                                                	cout << "\tadding the newNode to the tree" << endl;
+                                                	cout << "\tadding the newNode to the right (and pushing to the list)" << endl;
+                                                	ourList.push_back(current->right->value);
                                                 	break;
                                                 } else {
                                                 	//if the new value is bigger, move current to the right
@@ -84,7 +87,7 @@ class BST {
                     }
                 }
                 
-                Object findMin(){
+                int findMin(){
                 	  current = root;
                     while(current != NULL){
                           	 if(current->left != NULL) current = current->left;
@@ -92,7 +95,7 @@ class BST {
                     }
                 }
                 
-                 Object findMax(){
+                 int findMax(){
                 	  current = root;
                     while(current != NULL){
                           	 if(current->right != NULL) current = current->right;
@@ -102,29 +105,10 @@ class BST {
                
                //this is the function that gets called from the main program.
                list<Object> getList(){
-               	inOrder(root);
+               	ourList.sort();
                	return ourList;
                }
                
-               //this isn't right.. i can only work the left side of the tree. I haven't dug into the book yet.
-               //trying to feel my way through it..
-               void inOrder(BSTNode * current){
-               	//we want to get to the lowest values first, so if current->left is not null, follow it (recursively)
-                	 if(current->left != NULL) inOrder(current->left);
-                	 //else if current->left is null, then we know we've reached the lowest, so push this value to the list
-                	 else if(current->left == NULL){ 
-                	 	ourList.push_back(current->value);
-                	 	//now, we will work back up the list, using the parent pointer i added to the BSTNode struct
-                	 	while(current->parent != NULL){
-                	 		current = current->parent;
-                	 		ourList.push_back(current->value);
-                	 		//if there is an element to the right, push it to the list.
-                	 		if(current->right != NULL){
-                	 			 ourList.push_back(current->right->value); 
-                	 		}
-                	 	}
-                	 }
-              	}
 
 
         private:
