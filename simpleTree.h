@@ -40,10 +40,13 @@ class BST {
         ourList.sort();
         return ourList;
     }
+
     private:
+    //private data members
     list<Object> ourList;
     BSTNode * root;
     BSTNode * current;
+
     void insertRec(BSTNode * newNode, BSTNode * current){
         if(empty()){
             root = newNode;
@@ -94,8 +97,8 @@ class BST {
         }
         //if we want to delete the root, we have to make a new root and return
         if(x == root->value){
-            cout << "tcurrent: " << current->value << endl;
-            cout << "tdeleting root" << endl;
+            cout << "\tcurrent: " << current->value << endl;
+            cout << "\tdeleting root" << endl;
             BSTNode * nodeToDelete;
             nodeToDelete = current;
             BSTNode * tmpNode;
@@ -107,12 +110,12 @@ class BST {
         }
         //if the left node is not null, and x is greater than the left node, move there to evaluate again
         if(current->left != NULL && x < current->left->value){
-            cout << "tleft node = " << current->left->value << endl;
+            cout << "\tleft node = " << current->left->value << endl;
             deleteNodeRec(x, current->left);
         }
         //if the left node is not null, and the left node's value is equal to x, let's destroy it!
         else if( current->left != NULL && current->left->value == x) {
-            cout << "tdeleting node with value = " << current->left->value << endl;
+            cout << "\tdeleting node with value = " << current->left->value << endl;
             BSTNode * nodeToDelete;
             nodeToDelete = current->left;
             BSTNode * tmpNode;
@@ -122,12 +125,12 @@ class BST {
         }
         //if the right node is not null, and x is greater than the right node, move there to evaluate again
         else if(current->right != NULL && x > current->right->value){
-            cout << "tright node = " << current->right->value << endl;
+            cout << "\tright node = " << current->right->value << endl;
             deleteNodeRec(x, current->right);
         }
         //if the right node is not null, and the right node's value is equal to x, let's destroy it!
         else if( current->right != NULL && current->right->value == x) {
-            cout << "tdeleting node with value = " << current->value << endl;
+            cout << "\tdeleting node with value = " << current->value << endl;
             BSTNode * nodeToDelete;
             nodeToDelete = current;
             BSTNode * tmpNode;
