@@ -20,39 +20,26 @@ private:
 	      	if(current->right != NULL) makeList(current->right);
       	}
 ```
+After adding a delete method, and adding a few more values to the tree... the output looks like this (I also changed findMin and findMax to return pointers to nodes instead of ints.. more useful.. and I ommitted all the details about inserting to the tree, because that part works now):
 
-Now, the output looks like this:
 ```
 at this point, the tree should be empty. Looking for a 1: 1
 
-new value is smaller than current value: 8 < 10
-	adding 8 to the left of current node with value 10
-new value is bigger than current value: 11 > 10
-	adding 11 to the right of current node with value 10
-new value is smaller than current value: 9 < 10
-	moving to the right so we can see how our new value compares to that node
-new value is bigger than current value: 9 > 8
-	adding 9 to the right of current node with value 8
-new value is smaller than current value: 7 < 10
-	moving to the right so we can see how our new value compares to that node
-new value is smaller than current value: 7 < 8
-	adding 7 to the left of current node with value 8
-new value is bigger than current value: 12 > 10
-	moving to the right so we can see how our new value compares to that node
-new value is bigger than current value: 12 > 11
-	adding 12 to the right of current node with value 11
-new value is smaller than current value: 6 < 10
-	moving to the right so we can see how our new value compares to that node
-new value is smaller than current value: 6 < 8
-	moving to the right so we can see how our new value compares to that node
-new value is smaller than current value: 6 < 7
-	adding 6 to the left of current node with value 7
-	
 did we find a 12? we should have a 1!! --> 1
 
-an ordered list representing values in our tree: 6 7 8 9 10 11 12 
+an ordered list representing values in our tree: 6 7 8 9 10 11 12 13 15 16 17 18 22 
 
-Min: 6, Max: 12
+Deleting Node with value of 16
+	right node = 11
+	right node = 12
+	right node = 13
+	using findMinRec... right node = 22
+	left node = 18
+	left node = 17
+deleting node with value = 16
+
+an ordered list representing values in our tree: 6 7 8 9 10 11 12 13 15 17 18 22 
+
 ```
-
+There are conditions that check if the node has one child or two, and if the node is the root.. more details in comments in simpleTree.h
 
