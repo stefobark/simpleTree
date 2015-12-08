@@ -14,21 +14,33 @@ int main(){
         tree.recursiveInsert(7);
         tree.recursiveInsert(12);
         tree.recursiveInsert(6);
+        tree.recursiveInsert(13);
+        tree.recursiveInsert(22);
+        tree.recursiveInsert(18);
+        tree.recursiveInsert(17);
+        tree.recursiveInsert(16);
+        tree.recursiveInsert(15);
 
         int found = tree.find(12);
         cout << "did we find a 12? we should have a 1!! --> " << found << endl;
         
         inOrder = tree.getList();
-        cout << "an ordered list represent values in our tree: ";
+        cout << "an ordered list representing values in our tree: ";
         for(list<int>::iterator itr = inOrder.begin(); itr != inOrder.end(); itr++){
         		cout << *itr << " ";
         }
         cout << endl;
         
-        int min = tree.findMin();
-        int max = tree.findMax();
+        cout << "Deleting Node with value of 16" << endl;
+        tree.delNode(16);
         
-        cout << "Min: " << min << ", Max: " << max << endl;
+        list<int> newList;
+        newList = tree.getList();
+        cout << "an ordered list representing values in our tree: ";
+        for(list<int>::iterator itr = newList.begin(); itr != newList.end(); itr++){
+        		cout << *itr << " ";
+        }
+        cout << endl;
 }	
 
 

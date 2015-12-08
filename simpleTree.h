@@ -32,6 +32,10 @@ class BST {
                     bool answer = findRec(x, root);
                 }
                 
+                void delNode(Object x){
+                	deleteNodeRec(x, root);
+                }
+                
                 int findMin(){
                 	findMinRec(root);
                 }
@@ -41,7 +45,9 @@ class BST {
                 }
                
                 list<Object> getList (){
-                	makeList(root);
+                	current = root;
+                	if(ourList.empty() == 0) ourList.clear();
+                	makeList(current);
                 	ourList.sort();
                 	return ourList;
                 }
@@ -89,14 +95,96 @@ class BST {
              else return false;
 		}
 		
-		int findMinRec(BSTNode * current){
+		BSTNode * findMinRec(BSTNode * current){
         	 if(current->left != NULL) findMinRec(current->left);
-          else return current->value;
+          else return current;
       }
       
-      int findMaxRec(BSTNode * current){
+      BSTNode * findMaxRec(BSTNode * current){
         	if(current->right != NULL) findMaxRec(current->right);
-         else return current->value;
+         else return current;
+      }
+      
+      void deleteNodeRec(Object x, BSTNode * current ){
+			//if this happens, we know that value is not in our tree, just tell me its not there and return
+			if(current == NULL){ 
+      		cout << "element not in list" << endl;
+      		return;
+      	}
+      	//if we want to delete the root, we have to make a new root and return
+      	if(x == root->value){
+      		cout << "\tcurrent: " << current->value << endl;
+      		cout << "\tdeleting root" << endl;
+				BSTNode * nodeToDelete;
+				nodeToDelete = current;
+				BSTNode * tmpNode;
+				tmpNode = root;
+				root = current->right;
+				root->left = tmpNode->left;
+				delete nodeToDelete;
+				return;
+			}
+      	//if the left node is not null, and x is greater than the left node, move there to evaluate again
+      	if(current->left != NULL && x < current->left->value){
+      		cout << "\tleft node = " << current->left->value << endl;	
+      		deleteNodeRec(x, current->left);
+      	}
+      	//if the left node is not null, and the left node's value is equal to x, let's destroy it!
+      	else if( current->left != NULL && current->left->value == x) {
+      		cout << "deleting node with value = " << current->left->value << endl;
+				BSTNode * nodeToDelete;
+				nodeToDelete = current->left;
+				BSTNode * tmpNode;
+				tmpNode = current->left->left;
+				delete nodeToDelete;
+				current->left = tmpNode;
+			}
+      	//if the right node is not null, and x is greater than the right node, move there to evaluate again
+      	else if(current->right != NULL && x > current->right->value){
+      		cout << "\tright node = " << current->right->value << endl;	
+      		deleteNodeRec(x, current->right);
+      	}
+      	//if the right node is not null, and the right node's value is equal to x, let's destroy it!
+      	else if( current->right != NULL && current->right->value == x) {
+      		cout << "\tdeleting node with value = " << current->right->value << endl;
+				BSTNode * nodeToDelete;
+				nodeToDelete = current->right;
+				BSTNode * tmpNode;
+				tmpNode = current->right->right;
+				delete nodeToDelete;
+				current->right = tmpNode;
+			}
+			//else, if x is hidden behind a node that is greater than x, we have to do this work around-- this confused me for a while
+			//but now, it looks at the right node's value and checks to see if the min value underneathe is less than x, and then it
+			//proceeds to check from current->right
+      	else if(current->right != NULL && x > findMinRec(current->right)->value){
+      		cout << "\tusing findMinRec... right node = " << current->right->value << endl;	
+      		deleteNodeRec(x, current->right);
+      	}
+      	
+			//if the right node has two children and it has a value equal to x
+			else if( current->right->value == x && current->right->left != NULL && current->right->right != NULL ) {
+				cout << "current: " << current->value << endl;
+				BSTNode * nodeToDelete;
+				nodeToDelete = current->right;
+				BSTNode * tmpNode;
+				tmpNode = current->right->left;
+				current->right = current->right->right;
+				current->right->left = tmpNode;
+				delete nodeToDelete;
+			}
+			//if the left node has two children and it has a value equal to x
+			else if( current->left->value == x && current->left->left != NULL && current->left->right != NULL ) {
+				cout << "current: " << current->value << endl;
+				BSTNode * nodeToDelete;
+				nodeToDelete = current->left;
+				BSTNode * tmpNode;
+				tmpNode = current->left->left;
+				current->left = current->left->right;
+				current->left->left = tmpNode;
+				delete nodeToDelete;
+			}
+			
       }
       
       void makeList(BSTNode * current){
