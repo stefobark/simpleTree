@@ -92,7 +92,7 @@ class BST {
 			cout << "new current value: " << current->value;
 		 }
 		else if(current->right == NULL && current->left == NULL){
-			delete current;
+			*current = NULL;
 		 }
    }
 
