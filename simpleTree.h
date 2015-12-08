@@ -21,12 +21,18 @@ class BST {
         newNode->value = x;
         insertRec(newNode, root);
     }
-    bool find(Object x){
-        bool answer = findRec(x, root);
+    BSTNode * find(Object x){
+        BSTNode * answer = findRec(x, root);
+	cout << "found node with value: " << answer->value;
     }
     void delNode(Object x){
         deleteNodeRec(x, root);
     }
+    void delNodeTwo(Object x){
+	BSTNode * findIt = findRec(x,root);
+	cout << "findIt = " << findIt->value << endl;
+	deleteNodeRecTwo(x, findIt);
+   }
     int findMin(){
         findMinRec(root);
     }
@@ -41,11 +47,33 @@ class BST {
         return ourList;
     }
 
+    int findHeight(){
+	height = 0;
+	int theHeight = heightRec(root);
+	return theHeight;
+    }
+
     private:
     //private data members
     list<Object> ourList;
     BSTNode * root;
     BSTNode * current;
+    int height;
+
+    void deleteNodeRecTwo(Object x, BSTNode * current){
+	cout << "current = " << current->value << endl;
+	if(current->left != NULL && current->right != NULL){
+		BSTNode * max = findMaxRec(current->left);
+		BSTNode * tmp = current;
+		cout << "max of current->left = " << max->value << endl;
+		tmp->right = current->right;
+		tmp->left = findMaxRec(current->left);
+		cout << "new current : " << current->value <<endl;
+		max = findMaxRec(max);
+		current = tmp;
+		delete tmp;
+	}
+    }
 
     void insertRec(BSTNode * newNode, BSTNode * current){
         if(empty()){
@@ -53,33 +81,33 @@ class BST {
         }
         else if(newNode->value > current->value && current->right == NULL){
             cout << "new value is bigger than current value: " << newNode->value << " > " << current->value << endl;
-            cout << "tadding " << newNode->value << " to the right of current node with value " << current->value << endl;
+            cout << "\tadding " << newNode->value << " to the right of current node with value " << current->value << endl;
             current->right = newNode;
             return;
         }
         else if(newNode->value > current->value && current->right != NULL){
             cout << "new value is bigger than current value: " << newNode->value << " > " << current->value << endl;
-            cout << "tmoving to the right so we can see how our new value compares to that node" << endl;
+            cout << "\tmoving to the right so we can see how our new value compares to that node" << endl;
             insertRec(newNode, current->right);
         }
         else if(newNode->value < current->value && current->left == NULL){
             cout << "new value is smaller than current value: " << newNode->value << " < " << current->value << endl;
-            cout << "tadding " << newNode->value << " to the left of current node with value " << current->value << endl;
+            cout << "\tadding " << newNode->value << " to the left of current node with value " << current->value << endl;
             current->left = newNode;
             return;
         }
         else if(newNode->value < current->value && current->left != NULL){
             cout << "new value is smaller than current value: " << newNode->value << " < " << current->value << endl;
-            cout << "tmoving to the right so we can see how our new value compares to that node" << endl;
+            cout << "\tmoving to the right so we can see how our new value compares to that node" << endl;
             insertRec(newNode, current->left);
         }
         else return;
     }
-    bool findRec(Object x, BSTNode * current){
+    BSTNode * findRec(Object x, BSTNode * current){
         if(x > current->value) findRec(x, current->right);
         else if(x < current->value) findRec(x, current->left);
-        else if(current->value == x) return true;
-        else return false;
+        else if(current->value == x) return current;
+        else return 0;
     }
     BSTNode * findMinRec(BSTNode * current){
         if(current->left != NULL) findMinRec(current->left);
@@ -172,5 +200,16 @@ class BST {
         ourList.push_back(current->value);
         if(current->left != NULL) makeList(current->left);
         if(current->right != NULL) makeList(current->right);
+    }
+    
+    int heightRec(BSTNode * current){
+	if(current->left != NULL){
+		heightRec(current->left);
+		height++;
+	} 
+	if(current->right != NULL){
+		 heightRec(current->right);
+	}
+	return height;
     }
 };

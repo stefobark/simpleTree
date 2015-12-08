@@ -20,10 +20,7 @@ int main(){
         tree.recursiveInsert(17);
         tree.recursiveInsert(16);
         tree.recursiveInsert(15);
-         tree.recursiveInsert(23);
-
-        int found = tree.find(12);
-        cout << "did we find a 12? we should have a 1!! --> " << found << endl;
+        tree.recursiveInsert(23);
         
         inOrder = tree.getList();
         cout << "an ordered list representing values in our tree: ";
@@ -32,8 +29,8 @@ int main(){
         }
         cout << endl;
         
-        cout << "Deleting Node with value of 8" << endl;
-        tree.delNode(8);
+        cout << "Deleting Node with value of 22" << endl;
+        tree.delNodeTwo(22);
         
         list<int> newList;
         newList = tree.getList();
@@ -42,6 +39,10 @@ int main(){
         		cout << *itr << " ";
         }
         cout << endl;
+
+	cout << "find height" << endl;
+	int height = tree.findHeight();
+	cout << "height: " << height << endl;
 }	
 
 
