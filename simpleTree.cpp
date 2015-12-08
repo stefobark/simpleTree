@@ -20,6 +20,7 @@ int main(){
         tree.recursiveInsert(17);
         tree.recursiveInsert(16);
         tree.recursiveInsert(15);
+         tree.recursiveInsert(23);
 
         int found = tree.find(12);
         cout << "did we find a 12? we should have a 1!! --> " << found << endl;
@@ -31,8 +32,8 @@ int main(){
         }
         cout << endl;
         
-        cout << "Deleting Node with value of 16" << endl;
-        tree.delNode(16);
+        cout << "Deleting Node with value of 8" << endl;
+        tree.delNode(8);
         
         list<int> newList;
         newList = tree.getList();

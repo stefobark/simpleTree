@@ -131,7 +131,7 @@ class BST {
       	}
       	//if the left node is not null, and the left node's value is equal to x, let's destroy it!
       	else if( current->left != NULL && current->left->value == x) {
-      		cout << "deleting node with value = " << current->left->value << endl;
+      		cout << "\tdeleting node with value = " << current->left->value << endl;
 				BSTNode * nodeToDelete;
 				nodeToDelete = current->left;
 				BSTNode * tmpNode;
@@ -146,13 +146,13 @@ class BST {
       	}
       	//if the right node is not null, and the right node's value is equal to x, let's destroy it!
       	else if( current->right != NULL && current->right->value == x) {
-      		cout << "\tdeleting node with value = " << current->right->value << endl;
+      		cout << "\tdeleting node with value = " << current->value << endl;
 				BSTNode * nodeToDelete;
-				nodeToDelete = current->right;
+				nodeToDelete = current;
 				BSTNode * tmpNode;
 				tmpNode = current->right->right;
 				delete nodeToDelete;
-				current->right = tmpNode;
+				current->right->right = tmpNode;
 			}
 			//else, if x is hidden behind a node that is greater than x, we have to do this work around-- this confused me for a while
 			//but now, it looks at the right node's value and checks to see if the min value underneathe is less than x, and then it
