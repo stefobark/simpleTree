@@ -288,6 +288,7 @@ class BST {
 	} 
 	if(current->right != NULL){
 		 heightRec(current->right);
+		height++
 	}
 	return height;
     }
