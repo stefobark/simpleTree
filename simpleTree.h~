@@ -8,6 +8,7 @@ class BST {
         Object value;
         BSTNode * left;
         BSTNode * right;
+        BSTNode * parent;
     };
     public:
     BST() : root{NULL}
@@ -29,9 +30,7 @@ class BST {
         deleteNodeRec(x, root);
     }
     void delNodeTwo(Object x){
-	BSTNode * findIt = findRec(x,root);
-	cout << "findIt = " << findIt->value << endl;
-	deleteNodeRecTwo(x, findIt);
+		  deleteNodeRecTwo(x, root);
    }
     int findMin(){
         findMinRec(root);
@@ -61,11 +60,63 @@ class BST {
     BSTNode * current;
     int height;
 
-	//it finally doesn't give me any 0's when creating a list
+	/***************************************************
+	this is my new version of delete, its still a little
+	messy, but its smaller and still works!
+	I'm printing a lot of stuff to help me see how it's
+	working.
+	***************************************************/
+	
    void deleteNodeRecTwo(Object x, BSTNode * current){
+		if(x == root->value){
+			BSTNode & tmp = *root;
+			BSTNode * left = root->left;
+			BSTNode * right = root->right;
+			BSTNode * maxLeft = findMaxRec(tmp.left);
+			cout << "first maxLeft = " << maxLeft->value << endl;
+			maxLeft->parent->right = NULL;
+			tmp = *maxLeft;
+			//just checking that the new current is actually what i wanted
+			cout << "new current : " << current->value <<endl;
+			cout << "maxLeft = " << maxLeft->value << endl;
+			tmp.left = left;
+			tmp.right = right;
+			cout << "maxLeft = " << tmp.left->value << endl;
+			//just checking
+			cout << "current->left = " << tmp.left->value << endl;
+			cout << "current->left = " << tmp.right->value << endl;
+			tmp.parent = nullptr;
+			root->parent = NULL;
+			return;
+		}
+		
+		//show me the parent and the current
+		if(current->parent != NULL) cout << "parent = " << current->parent->value << endl;
 		cout << "current = " << current->value << endl;
+		
+		//if current->value is smaller than x, move to current->right)
+		
+		if(current->value < x){
+		 	deleteNodeRecTwo(x, current->right);
+		 }
+		 //if current->value is bigger than x, move to current->left)
+		else if(current->value > x){
+			deleteNodeRecTwo(x, current->left);
+		}
+		//if we've found the node, and if the node has no children
+		else if(current->value == x && current->right == NULL && current->left == NULL){
+			BSTNode * tmp = current;
+			cout << "current value = " << tmp->value << endl;
+			BSTNode * parent = current->parent;
+			cout << "parent value = " << parent->value << endl;
+			
+			if(parent->value < tmp->value) parent->right = NULL;
+			if(parent->value > tmp->value) parent->left = NULL; 
+			current = NULL;
+			delete tmp;
+		 }
 		//if the node has two children
-		if(current->left != NULL && current->right != NULL){
+		else if(current->value == x && current->left != NULL && current->right != NULL){
 			//save the right pointer
 			BSTNode * right = current->right;
 			//tmp will reference the address of what current points to
@@ -81,63 +132,81 @@ class BST {
 			//just checking
 			cout << "tmp.left = " << tmp.left->value << endl;
 		}
-		else if(current->left != NULL && current->right == NULL){
+		//if the node has one child to the left
+		else if(current->value == x && current->left != NULL && current->right == NULL){
 			BSTNode & tmp = *current;
 			tmp = *current->left;
-			cout << "new current value: " << current->value;
+			cout << "new current value: " << current->value << endl;
+		}
+		//if the node has one child to the right
+		else if(current->value == x && current->right != NULL && current->left == NULL){
+			BSTNode * tmp = current;
+			tmp = current->right;
+			cout << "new current value: " << current->value << endl;
 		 }
-		else if(current->right != NULL && current->left == NULL){
-			BSTNode & tmp = *current;
-			tmp = *current->right;
-			cout << "new current value: " << current->value;
-		 }
-		else if(current->right == NULL && current->left == NULL){
-			*current = NULL;
-		 }
+		
+		
    }
 
     void insertRec(BSTNode * newNode, BSTNode * current){
+        //if the list is empty
         if(empty()){
             root = newNode;
         }
+        //if the new value is bigger than the current value and the right node is null, just add the newNode to the right
         else if(newNode->value > current->value && current->right == NULL){
             cout << "new value is bigger than current value: " << newNode->value << " > " << current->value << endl;
             cout << "\tadding " << newNode->value << " to the right of current node with value " << current->value << endl;
             current->right = newNode;
+            newNode->parent = current;
             return;
         }
+        //if the new value is bigger than the current value and the right node is not null, call this method again
         else if(newNode->value > current->value && current->right != NULL){
             cout << "new value is bigger than current value: " << newNode->value << " > " << current->value << endl;
             cout << "\tmoving to the right so we can see how our new value compares to that node" << endl;
+            newNode->parent = current;
             insertRec(newNode, current->right);
         }
+        //if the new value is smaller than the current value and the left node is null, just add the newNode to the left
         else if(newNode->value < current->value && current->left == NULL){
             cout << "new value is smaller than current value: " << newNode->value << " < " << current->value << endl;
             cout << "\tadding " << newNode->value << " to the left of current node with value " << current->value << endl;
+            newNode->parent = current;
             current->left = newNode;
+           
             return;
         }
+        //if the new value is smaller than the current value and the left node is not null, call this method again
         else if(newNode->value < current->value && current->left != NULL){
             cout << "new value is smaller than current value: " << newNode->value << " < " << current->value << endl;
             cout << "\tmoving to the right so we can see how our new value compares to that node" << endl;
+            newNode->parent = current;
             insertRec(newNode, current->left);
         }
-        else return;
+        else if(newNode->value == current->value) return;
     }
+    //returns a pointer to a Node, this is useful for delete
     BSTNode * findRec(Object x, BSTNode * current){
         if(x > current->value) findRec(x, current->right);
         else if(x < current->value) findRec(x, current->left);
         else if(current->value == x) return current;
         else return 0;
     }
+    //returns a pointer to a Node, this is useful for delete
     BSTNode * findMinRec(BSTNode * current){
-        if(current->left != NULL) findMinRec(current->left);
+        if(current->left != NULL ) findMinRec(current->left);
         else return current;
     }
+    //returns a pointer to a Node, this is useful for delete
     BSTNode * findMaxRec(BSTNode * current){
         if(current->right != NULL) findMaxRec(current->right);
+        
         else return current;
     }
+    /*********************************************************************
+    this is my old version of delete. it works, but its messy and tooo big
+    *********************************************************************/
     void deleteNodeRec(Object x, BSTNode * current ){
         //if this happens, we know that value is not in our tree, just tell me its not there and return
         if(current == NULL){
@@ -150,6 +219,7 @@ class BST {
             cout << "\tdeleting root" << endl;
             BSTNode * nodeToDelete;
             nodeToDelete = current;
+            //i made this tmpNode to keep track of what the root is pointing to on the left
             BSTNode * tmpNode;
             tmpNode = root;
             root = current->right;
@@ -218,6 +288,7 @@ class BST {
         }
     }
     void makeList(BSTNode * current){
+    	
         ourList.push_back(current->value);
         if(current->left != NULL) makeList(current->left);
         if(current->right != NULL) makeList(current->right);
