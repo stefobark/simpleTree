@@ -32,14 +32,14 @@ int main(){
         }
         cout << endl;
         
-        cout << "Deleting Node with value of 6" << endl;
-        tree.delNodeTwo(6);
         cout << "Deleting Node with value of 10" << endl;
         tree.delNodeTwo(10);
-	cout << "Deleting Node with value of 5" << endl;
-	tree.delNodeTwo(5);
-	cout << "Deleting Node with value of 23" << endl;
-	tree.delNodeTwo(23);
+        cout << "Deleting Node with value of 6" << endl;
+			tree.delNodeTwo(6);
+			cout << "Deleting Node with value of 5" << endl;
+			tree.delNodeTwo(5);
+			cout << "Deleting Node with value of 23" << endl;
+			tree.delNodeTwo(23);
         
         list<int> newList;
         newList = tree.getList();

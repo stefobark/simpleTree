@@ -17,6 +17,9 @@ class BST {
         if(root == NULL) return 1;
         else return 0;
     }
+    int f() {
+	return f(root);
+	}
     void recursiveInsert(Object x){
         BSTNode * newNode = new BSTNode;
         newNode->value = x;
@@ -59,6 +62,16 @@ class BST {
     BSTNode * root;
     BSTNode * current;
     int height;
+   
+    int f(BSTNode * cur) {
+		if (cur == NULL)
+			return 0;
+		else {
+			int leftS = f(cur->left);
+			int rightS = f(cur->right);
+			return 1 + (leftS>rightS ? rightS : leftS);
+		}
+	}
 
 	/***************************************************
 	this is my new version of delete, its still a little
@@ -69,54 +82,58 @@ class BST {
 	
    void deleteNodeRecTwo(Object x, BSTNode * current){
 		if(x == root->value){
+			cout << "deleting a root" << endl;
 			BSTNode & tmp = *root;
 			BSTNode * left = root->left;
 			BSTNode * right = root->right;
 			BSTNode * maxLeft = findMaxRec(tmp.left);
-			cout << "first maxLeft = " << maxLeft->value << endl;
 			maxLeft->parent->right = NULL;
 			tmp = *maxLeft;
 			//just checking that the new current is actually what i wanted
-			cout << "new current : " << current->value <<endl;
-			cout << "maxLeft = " << maxLeft->value << endl;
 			tmp.left = left;
 			tmp.right = right;
-			cout << "maxLeft = " << tmp.left->value << endl;
 			//just checking
-			cout << "current->left = " << tmp.left->value << endl;
-			cout << "current->left = " << tmp.right->value << endl;
-			tmp.parent = nullptr;
+			tmp.parent = NULL;
 			root->parent = NULL;
 			return;
 		}
-		
-		//show me the parent and the current
-		if(current->parent != NULL) cout << "parent = " << current->parent->value << endl;
-		cout << "current = " << current->value << endl;
-		
 		//if current->value is smaller than x, move to current->right)
-		
 		if(current->value < x){
+			cout << "moving to the right" << endl;
+			cout << "current" << current->right->value << endl;
+			if(current != NULL) cout << "parent" << current->value << endl;
+			
 		 	deleteNodeRecTwo(x, current->right);
 		 }
 		 //if current->value is bigger than x, move to current->left)
 		else if(current->value > x){
+			
+			cout << "moving to the left" << endl;
+			cout << "current" << current->left->value << endl;
+			if(current != NULL) cout << "parent" << current->value << endl;
 			deleteNodeRecTwo(x, current->left);
 		}
 		//if we've found the node, and if the node has no children
 		else if(current->value == x && current->right == NULL && current->left == NULL){
+			cout << "deleting node with no children" << endl;
+			cout << "current" << current->value << endl;
+			if(current->parent != NULL) cout << "parent" << current->parent->value << endl;
 			BSTNode * tmp = current;
-			cout << "current value = " << tmp->value << endl;
-			BSTNode * parent = current->parent;
-			cout << "parent value = " << parent->value << endl;
 			
-			if(parent->value < tmp->value) parent->right = NULL;
-			if(parent->value > tmp->value) parent->left = NULL; 
-			current = NULL;
+			if(tmp->parent->value < tmp->value){
+				cout << current->parent->value << " < " << tmp->value << endl;
+				current->parent->right = NULL;
+			}
+			if(tmp->parent->value > tmp->value){
+			 	cout << current->parent->value << " > " << tmp->value << endl;
+			 	current->parent->left = NULL;
+			}
 			delete tmp;
+			return;
 		 }
 		//if the node has two children
 		else if(current->value == x && current->left != NULL && current->right != NULL){
+			cout << "deleting a node with two children" << endl;
 			//save the right pointer
 			BSTNode * right = current->right;
 			//tmp will reference the address of what current points to
@@ -126,24 +143,25 @@ class BST {
 			//and now we use that node pointer we created in the beginning
 			tmp.right = right;
 			//just checking that the new current is actually what i wanted
-			cout << "new current : " << tmp.value <<endl;
 			//and, finally, the new current's left node will be the max valued node to the left of the new current node
 			tmp.left = findMaxRec(tmp.left);
 			//just checking
-			cout << "tmp.left = " << tmp.left->value << endl;
 		}
 		//if the node has one child to the left
-		else if(current->value == x && current->left != NULL && current->right == NULL){
-			BSTNode & tmp = *current;
-			tmp = current->left;
-			cout << "new current value: " << current->value << endl;
+		else if(current->left != NULL && current->right == NULL && current->value == x){
+			cout << "deleting a node with one child to the left" << endl;
+			current->left->parent = current->parent;
+			return;
 		}
 		//if the node has one child to the right
-		else if(current->value == x && current->right != NULL && current->left == NULL){
-			BSTNode * tmp = current;
-			tmp = current->right;
-			cout << "new current value: " << current->value << endl;
+		else if(current->right != NULL && current->left == NULL && current->value == x){
+			cout << "deleting a node with one child to the right" << endl;
+			current->right->parent = current->parent;
+			return;
+			
+			return;
 		 }
+		 
 		
 		
    }
@@ -155,32 +173,23 @@ class BST {
         }
         //if the new value is bigger than the current value and the right node is null, just add the newNode to the right
         else if(newNode->value > current->value && current->right == NULL){
-            cout << "new value is bigger than current value: " << newNode->value << " > " << current->value << endl;
-            cout << "\tadding " << newNode->value << " to the right of current node with value " << current->value << endl;
             current->right = newNode;
-            newNode->parent = current;
+            current->right->parent = current;
             return;
         }
         //if the new value is bigger than the current value and the right node is not null, call this method again
         else if(newNode->value > current->value && current->right != NULL){
-            cout << "new value is bigger than current value: " << newNode->value << " > " << current->value << endl;
-            cout << "\tmoving to the right so we can see how our new value compares to that node" << endl;
-            newNode->parent = current;
+            current->right->parent = current;
             insertRec(newNode, current->right);
         }
         //if the new value is smaller than the current value and the left node is null, just add the newNode to the left
         else if(newNode->value < current->value && current->left == NULL){
-            cout << "new value is smaller than current value: " << newNode->value << " < " << current->value << endl;
-            cout << "\tadding " << newNode->value << " to the left of current node with value " << current->value << endl;
             current->left = newNode;
-            newNode->parent = current;
-            
+            current->left->parent = current;
         }
         //if the new value is smaller than the current value and the left node is not null, call this method again
         else if(newNode->value < current->value && current->left != NULL){
-            cout << "new value is smaller than current value: " << newNode->value << " < " << current->value << endl;
-            cout << "\tmoving to the right so we can see how our new value compares to that node" << endl;
-            newNode->parent = current;
+            current->left->parent = current;
             insertRec(newNode, current->left);
         }
         else if(newNode->value == current->value) return;
@@ -214,8 +223,6 @@ class BST {
         }
         //if we want to delete the root, we have to make a new root and return
         if(x == root->value){
-            cout << "\tcurrent: " << current->value << endl;
-            cout << "\tdeleting root" << endl;
             BSTNode * nodeToDelete;
             nodeToDelete = current;
             //i made this tmpNode to keep track of what the root is pointing to on the left
@@ -228,12 +235,10 @@ class BST {
         }
         //if the left node is not null, and x is greater than the left node, move there to evaluate again
         if(current->left != NULL && x < current->left->value){
-            cout << "\tleft node = " << current->left->value << endl;
             deleteNodeRec(x, current->left);
         }
         //if the left node is not null, and the left node's value is equal to x, let's destroy it!
         else if( current->left != NULL && current->left->value == x) {
-            cout << "\tdeleting node with value = " << current->left->value << endl;
             BSTNode * nodeToDelete;
             nodeToDelete = current->left;
             BSTNode * tmpNode;
@@ -243,12 +248,10 @@ class BST {
         }
         //if the right node is not null, and x is greater than the right node, move there to evaluate again
         else if(current->right != NULL && x > current->right->value){
-            cout << "\tright node = " << current->right->value << endl;
             deleteNodeRec(x, current->right);
         }
         //if the right node is not null, and the right node's value is equal to x, let's destroy it!
         else if( current->right != NULL && current->right->value == x) {
-            cout << "\tdeleting node with value = " << current->value << endl;
             BSTNode * nodeToDelete;
             nodeToDelete = current;
             BSTNode * tmpNode;
@@ -265,7 +268,6 @@ class BST {
         }
         //if the right node has two children and it has a value equal to x
         else if( current->right->value == x && current->right->left != NULL && current->right->right != NULL ) {
-            cout << "current: " << current->value << endl;
             BSTNode * nodeToDelete;
             nodeToDelete = current->right;
             BSTNode * tmpNode;
@@ -276,7 +278,6 @@ class BST {
         }
         //if the left node has two children and it has a value equal to x
         else if( current->left->value == x && current->left->left != NULL && current->left->right != NULL ) {
-            cout << "current: " << current->value << endl;
             BSTNode * nodeToDelete;
             nodeToDelete = current->left;
             BSTNode * tmpNode;

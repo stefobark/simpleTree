@@ -97,26 +97,39 @@ class BST {
 			root->parent = NULL;
 			return;
 		}
-		
 		//if current->value is smaller than x, move to current->right)
 		if(current->value < x){
 			cout << "moving to the right" << endl;
+			cout << "current" << current->right->value << endl;
+			if(current != NULL) cout << "parent" << current->value << endl;
+			
 		 	deleteNodeRecTwo(x, current->right);
 		 }
 		 //if current->value is bigger than x, move to current->left)
 		else if(current->value > x){
+			
 			cout << "moving to the left" << endl;
+			cout << "current" << current->left->value << endl;
+			if(current != NULL) cout << "parent" << current->value << endl;
 			deleteNodeRecTwo(x, current->left);
 		}
 		//if we've found the node, and if the node has no children
 		else if(current->value == x && current->right == NULL && current->left == NULL){
 			cout << "deleting node with no children" << endl;
+			cout << "current" << current->value << endl;
+			if(current->parent != NULL) cout << "parent" << current->parent->value << endl;
 			BSTNode * tmp = current;
-			BSTNode * parent = current->parent;
-			if(parent->value < tmp->value) parent->right = NULL;
-			if(parent->value > tmp->value) parent->left = NULL; 
+			
+			if(tmp->parent->value < tmp->value){
+				cout << current->parent->value << " < " << tmp->value << endl;
+				current->parent->right = NULL;
+			}
+			if(tmp->parent->value > tmp->value){
+			 	cout << current->parent->value << " > " << tmp->value << endl;
+			 	current->parent->left = NULL;
+			}
 			delete tmp;
-			current = NULL;
+			return;
 		 }
 		//if the node has two children
 		else if(current->value == x && current->left != NULL && current->right != NULL){
@@ -135,19 +148,20 @@ class BST {
 			//just checking
 		}
 		//if the node has one child to the left
-		else if(current->value == x && current->left != NULL && current->right == NULL){
+		else if(current->left != NULL && current->right == NULL && current->value == x){
 			cout << "deleting a node with one child to the left" << endl;
-			BSTNode * cur = current;
-			current->parent->left = cur->left;
-			delete cur;
-			current = NULL;
+			current->left->parent = current->parent;
+			return;
 		}
 		//if the node has one child to the right
-		else if(current->value == x && current->right != NULL && current->left == NULL){
+		else if(current->right != NULL && current->left == NULL && current->value == x){
 			cout << "deleting a node with one child to the right" << endl;
-			BSTNode * tmp = current;
-			tmp = current->right;
+			current->parent->right = current->right;
+			return;
+			
+			return;
 		 }
+		 
 		
 		
    }
@@ -160,23 +174,22 @@ class BST {
         //if the new value is bigger than the current value and the right node is null, just add the newNode to the right
         else if(newNode->value > current->value && current->right == NULL){
             current->right = newNode;
-            newNode->parent = current;
+            current->right->parent = current;
             return;
         }
         //if the new value is bigger than the current value and the right node is not null, call this method again
         else if(newNode->value > current->value && current->right != NULL){
-            newNode->parent = current;
+            current->right->parent = current;
             insertRec(newNode, current->right);
         }
         //if the new value is smaller than the current value and the left node is null, just add the newNode to the left
         else if(newNode->value < current->value && current->left == NULL){
             current->left = newNode;
-            newNode->parent = current;
-            
+            current->left->parent = current;
         }
         //if the new value is smaller than the current value and the left node is not null, call this method again
         else if(newNode->value < current->value && current->left != NULL){
-            newNode->parent = current;
+            current->left->parent = current;
             insertRec(newNode, current->left);
         }
         else if(newNode->value == current->value) return;

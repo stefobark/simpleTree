@@ -1,4 +1,3 @@
-#include<iostream>
 #include"simpleTree.h"
 #include<list>
 using namespace std;
@@ -24,6 +23,8 @@ int main(){
         tree.recursiveInsert(5);
         tree.recursiveInsert(24);
         
+	int f = tree.f();
+	cout << "f = " << f;
         inOrder = tree.getList();
         cout << "an ordered list representing values in our tree: ";
         for(list<int>::iterator itr = inOrder.begin(); itr != inOrder.end(); itr++){
@@ -31,14 +32,12 @@ int main(){
         }
         cout << endl;
         
-        cout << "Deleting Node with value of 24" << endl;
-        tree.delNodeTwo(24);
-        cout << "Deleting Node with value of 6" << endl;
-        tree.delNodeTwo(6);
-        cout << "Deleting Node with value of 22" << endl;
-        tree.delNodeTwo(22);
         cout << "Deleting Node with value of 10" << endl;
         tree.delNodeTwo(10);
+        cout << "Deleting Node with value of 6" << endl;
+			tree.delNodeTwo(6);
+			cout << "Deleting Node with value of 5" << endl;
+			tree.delNodeTwo(5);
         
         list<int> newList;
         newList = tree.getList();
