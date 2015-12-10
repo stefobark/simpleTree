@@ -134,8 +134,8 @@ class BST {
 		}
 		//if the node has one child to the left
 		else if(current->value == x && current->left != NULL && current->right == NULL){
-			BSTNode & tmp = *current;
-			tmp = *current->left;
+			BSTNode * tmp = current;
+			tmp = current->left;
 			cout << "new current value: " << current->value << endl;
 		}
 		//if the node has one child to the right
@@ -172,10 +172,9 @@ class BST {
         else if(newNode->value < current->value && current->left == NULL){
             cout << "new value is smaller than current value: " << newNode->value << " < " << current->value << endl;
             cout << "\tadding " << newNode->value << " to the left of current node with value " << current->value << endl;
-            newNode->parent = current;
             current->left = newNode;
-           
-            return;
+            newNode->parent = current;
+            
         }
         //if the new value is smaller than the current value and the left node is not null, call this method again
         else if(newNode->value < current->value && current->left != NULL){
