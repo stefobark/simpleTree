@@ -2,12 +2,13 @@
 the simplest possible binary tree.. 
 
 With:
-	* find()
-	* findMin()
-	* findMax()
-		* These all call private methods return pointers to nodes
-	* two versions of delete
-	* insert
+* find()
+* findMin()
+* findMax()
+  * These all call private methods return pointers to nodes
+* two versions of delete
+* insert
+
 The output of the program looks like:
 
 ```
