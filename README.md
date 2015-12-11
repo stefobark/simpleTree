@@ -6,24 +6,39 @@ With:
 	* findMin()
 	* findMax()
 		* These all call private methods return pointers to nodes
+	* two versions of delete
+	* insert
+The output of the program looks like:
+
 ```
+root@ubuntu:~/simpleTree# ./simpleTree
 at this point, the tree should be empty. Looking for a 1: 1
+f = 2
+an ordered list representing values in our tree: 5 6 7 8 9 10 11 12 13 15 16 17 18 22 23 24 
 
-did we find a 12? we should have a 1!! --> 1
+Deleting Node with value of 10
+deleting a root
+an ordered list representing values in our tree: 5 6 7 8 9 11 12 13 15 16 17 18 22 23 24 
 
-an ordered list representing values in our tree: 6 7 8 9 10 11 12 13 15 16 17 18 22 
+Deleting Node with value of 6
+deleting a node with one child to the left
+an ordered list representing values in our tree: 5 7 8 9 11 12 13 15 16 17 18 22 23 24 
 
-Deleting Node with value of 16
-	right node = 11
-	right node = 12
-	right node = 13
-	using findMinRec... right node = 22
-	left node = 18
-	left node = 17
-deleting node with value = 16
+Deleting Node with value of 5
+deleting node with no children
+an ordered list representing values in our tree: 7 8 9 11 12 13 15 16 17 18 22 23 24 
 
-an ordered list representing values in our tree: 6 7 8 9 10 11 12 13 15 17 18 22 
+Deleting Node with value of 23
+deleting a node with one child to the right
+an ordered list representing values in our tree: 7 8 9 11 12 13 15 16 17 18 22 24 
+
+Deleting Node with value of 22
+deleting a node with two children
+an ordered list representing values in our tree: 7 8 9 11 12 13 15 16 17 18 24 
+
+find height
+height: 6
+
 
 ```
-There are conditions that check if the node has one child or two, and if the node is the root.. more details in comments in simpleTree.h
 
