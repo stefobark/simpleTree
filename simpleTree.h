@@ -17,9 +17,10 @@ class BST {
         if(root == NULL) return 1;
         else return 0;
     }
+    //this was on our final test. not exactly sure what its for :)
     int f() {
-	return f(root);
-	}
+		return f(root);
+	 }
     void recursiveInsert(Object x){
         BSTNode * newNode = new BSTNode;
         newNode->value = x;
@@ -29,17 +30,19 @@ class BST {
         BSTNode * answer = findRec(x, root);
 	cout << "found node with value: " << answer->value;
     }
+    //this was to call my first version of delete
     void delNode(Object x){
         deleteNodeRec(x, root);
     }
+    //calls my second version of delete
     void delNodeTwo(Object x){
 		  deleteNodeRecTwo(x, root);
    }
     int findMin(){
-        findMinRec(root);
+        int min = findMinRec(root)->value;
     }
     int findMax(){
-        findMaxRec(root);
+        int max = findMaxRec(root)->value;
     }
     list<Object> getList (){
         current = root;
@@ -50,10 +53,10 @@ class BST {
     }
 
    int findHeight(){
-	if(root == NULL) height = 0;
-	else height = 1;
-	int theHeight = heightRec(root);
-	return theHeight;
+   if(root != NULL){
+		int theHeight = heightRec(root);
+		return theHeight;
+	} else return 0; 
     }
 
     private:
@@ -61,8 +64,18 @@ class BST {
     list<Object> ourList;
     BSTNode * root;
     BSTNode * current;
-    int height;
-   
+    int leftHeight = 1;
+	 int rightHeight = 1;
+    
+    //from our final.. not sure about it.
+    //I read about "?" and, i understand what it does,
+    //but I don't understand why this would return 2 when I run it from my main program
+    //seems that it should return rightS if true and leftS if false.
+    //but, it doesn't return rightS->value or leftS->value..
+    //so how does it add 1 to anything?
+    //OHHHHH!!! leftS and rightS are ints!!
+    //so maybe they are equal to 1 if they are present?
+    //and maybe this method checks to see if the current node has 1 or two children?
     int f(BSTNode * cur) {
 		if (cur == NULL)
 			return 0;
@@ -75,9 +88,13 @@ class BST {
 
 	/***************************************************
 	this is my new version of delete, its still a little
-	messy, but its smaller and still works!
-	I'm printing a lot of stuff to help me see how it's
-	working.
+	messy, but it uses a parent, instead of checking one
+	node ahead. I've checked that it works on
+			* nodes with no children
+			* nodes with one child to the right
+			* nodes with one child to the left
+			* nodes with two children
+			* and the root node
 	***************************************************/
 	
    void deleteNodeRecTwo(Object x, BSTNode * current){
@@ -98,41 +115,29 @@ class BST {
 			return;
 		}
 		//if current->value is smaller than x, move to current->right)
-		if(current->value < x){
-			cout << "moving to the right" << endl;
-			cout << "current" << current->right->value << endl;
-			if(current != NULL) cout << "parent" << current->value << endl;
-			
+		if(current->value < x){			
 		 	deleteNodeRecTwo(x, current->right);
 		 }
 		 //if current->value is bigger than x, move to current->left)
 		else if(current->value > x){
-			
-			cout << "moving to the left" << endl;
-			cout << "current" << current->left->value << endl;
-			if(current != NULL) cout << "parent" << current->value << endl;
 			deleteNodeRecTwo(x, current->left);
 		}
 		//if we've found the node, and if the node has no children
-		else if(current->value == x && current->right == NULL && current->left == NULL){
+		if(current->right == NULL && current->left == NULL && current->value == x){
 			cout << "deleting node with no children" << endl;
-			cout << "current" << current->value << endl;
-			if(current->parent != NULL) cout << "parent" << current->parent->value << endl;
-			BSTNode * tmp = current;
-			
-			if(tmp->parent->value < tmp->value){
-				cout << current->parent->value << " < " << tmp->value << endl;
-				current->parent->right = NULL;
+			//if this node is to the right of the parent
+			if(current->parent->value < current->value){
+				current->parent->right = nullptr;
 			}
-			if(tmp->parent->value > tmp->value){
-			 	cout << current->parent->value << " > " << tmp->value << endl;
-			 	current->parent->left = NULL;
+			//if this node is to the left of the parent
+			else if(current->parent->value > current->value){
+			 	current->parent->left = nullptr;
 			}
-			delete tmp;
+			delete current;
 			return;
 		 }
 		//if the node has two children
-		else if(current->value == x && current->left != NULL && current->right != NULL){
+		if(current->value == x && current->left != NULL && current->right != NULL){
 			cout << "deleting a node with two children" << endl;
 			//save the right pointer
 			BSTNode * right = current->right;
@@ -145,27 +150,25 @@ class BST {
 			//just checking that the new current is actually what i wanted
 			//and, finally, the new current's left node will be the max valued node to the left of the new current node
 			tmp.left = findMaxRec(tmp.left);
-			//just checking
+			return;
 		}
 		//if the node has one child to the left
-		else if(current->left != NULL && current->right == NULL && current->value == x){
+		if(current->left != NULL && current->right == NULL && current->value == x){
 			cout << "deleting a node with one child to the left" << endl;
+			current->parent->left = current->left;
 			current->left->parent = current->parent;
+			current = current->left;
+			
 			return;
 		}
 		//if the node has one child to the right
-		else if(current->right != NULL && current->left == NULL && current->value == x){
+		if(current->right != NULL && current->left == NULL && current->value == x){
 			cout << "deleting a node with one child to the right" << endl;
 			current->parent->right = current->right;
 			return;
-			
-			return;
 		 }
-		 
-		
-		
    }
-
+	//as I insert, I also add the parent
     void insertRec(BSTNode * newNode, BSTNode * current){
         //if the list is empty
         if(empty()){
@@ -287,21 +290,29 @@ class BST {
             delete nodeToDelete;
         }
     }
+    //this gets called from getList()
+    //it will traverse the tree from the root and go to the left or right of each node as long as they're not null
     void makeList(BSTNode * current){
     	
         ourList.push_back(current->value);
         if(current->left != NULL) makeList(current->left);
         if(current->right != NULL) makeList(current->right);
     }
-    
+    //
     int heightRec(BSTNode * current){
-	if(current->left != NULL){
-		heightRec(current->left);
-		height++;
-	} 
-	if(current->right != NULL){
-		 heightRec(current->right);
-	}
-	return height;
+		
+		if(current->left != NULL){
+			leftHeight++;
+			heightRec(current->left);
+			
+		} 
+		
+		if(current->right != NULL){
+			 rightHeight++;
+			 heightRec(current->right);
+			 
+		}
+		if(leftHeight > rightHeight) return leftHeight;
+		else return rightHeight;
     }
 };
